@@ -1,0 +1,10 @@
+1. Com'è stato il trend totale dei reati negli ultimi anni?
+   Grafico flussi
+2. Quali sono i reati più comuni?
+   Grafico a barre variabile anno dopo anno, usando una barra scorribile
+3. Quali sono le regioni/province con più denunce?
+   Mappa dell'Italia a colori; più mappe per ogni reato?
+4. Dove c'è stata più crescita e dove più decrescita?
+   Indicatori frecce? 
+5. Qual è il reato più diffuso per ogni regione/provincia?
+   Mappa colorata dell'Italia, ogni colore un reato. 
