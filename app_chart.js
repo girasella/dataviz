@@ -27,16 +27,17 @@ async function draw() {
 
     // List of groups = header of the csv files
     var keys = data.columns.slice(1)
-
+    const colors = d3.quantize((t)=>d3.interpolateTurbo(t), data.length-1)
     // color palette
     var color = d3.scaleOrdinal()
         .domain(keys)
-        .range(d3.schemePaired);
+        .range(colors);
 
     //stack the data?
     var stackedData = d3.stack()
         .keys(keys)
         (data)
+    console.log(stackedData)
     //////////
     // AXIS //
     //////////
@@ -63,10 +64,13 @@ async function draw() {
         .attr("y", -20)
         .text("# reati")
         .attr("text-anchor", "start")
-
+    
+    
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, 3636656])   //sostituire con valore max ricavato da dataset.
+        .domain([0, d3.max(stackedData,(group) => {
+            return d3.max(group,(level) => level[1])
+        })])   //sostituire con valore max ricavato da dataset.
         .range([dimensions.ctrHeight, 0]);
 
     ctr.append("g")
