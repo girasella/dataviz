@@ -70,7 +70,7 @@ async function draw() {
     var y = d3.scaleLinear()
         .domain([0, d3.max(stackedData,(group) => {
             return d3.max(group,(level) => level[1])
-        })])   //sostituire con valore max ricavato da dataset.
+        })])   
         .range([dimensions.ctrHeight, 0]);
 
     ctr.append("g")
