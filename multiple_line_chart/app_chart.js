@@ -1,3 +1,4 @@
+async function draw() {
 var margin = {top: 20, right: 200, bottom: 100, left: 50},
     margin2 = { top: 430, right: 10, bottom: 20, left: 40 },
     width = 960 - margin.left - margin.right,
@@ -33,7 +34,6 @@ var yAxis = d3.svg.axis()
     .orient("left");  
 
 var line = d3.svg.line()
-    .interpolate("basis")
     .x(function(d) { return xScale(d.date); })
     .y(function(d) { return yScale(d.rating); })
     .defined(function(d) { return d.rating; });  // Hiding line value defaults of 0 for missing data
@@ -90,7 +90,7 @@ d3.csv("../data/delittiPS2.csv", function(error, data) {
           rating: +(d[name]),
           };
       }),
-      visible: (name === "Unemployment" ? true : false) // "visible": all false except for economy which is true.
+      visible: (name === "ingiurie" ? true : false) // "visible": all false except for economy which is true.
     };
   });
 
@@ -348,3 +348,7 @@ d3.csv("../data/delittiPS2.csv", function(error, data) {
     });
     return d3.max(maxYValues);
   }
+}
+
+
+draw()

@@ -31,11 +31,11 @@ body {
   
   .hover-line { 
     stroke: #E6E7E8;
-    fill: none;
+    fill: black;
     stroke-width: 1px;
     left: 10px;
     shape-rendering: crispEdges;
-    opacity: 1e-6;
+    opacity: 1;
   }
   
   .hover-text {
