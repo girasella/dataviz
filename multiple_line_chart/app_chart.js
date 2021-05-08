@@ -162,8 +162,8 @@ svg.append("defs")
   //for slider part-----------------------------------------------------------------------------------
 
   var brush = d3.brushX()//for slider bar at the bottom
-    .extent(xScale2.range())    
-    .on("start brush end", brushed);
+    .extent([[0,0],[width, height2]])
+    .on("end", brushed);
 
   context.append("g") // Create brushing xAxis
     .attr("class", "x axis1")
@@ -185,12 +185,12 @@ svg.append("defs")
     .attr("fill", "#F1F1F2");
 
   //append the brush for the selection of subsection  
-  context.append("g")
-    .attr("class", "x brush")
+  context.append("g")    
     .call(brush)
-    .selectAll("rect")
+    .attr("class", "x brush")
+    /*.selectAll("rect")
     .attr("height", height2) // Make brush rects same height 
-    .attr("fill", "#E6E7E8");
+    .attr("fill", "#E6E7E8");*/
   //end slider part-----------------------------------------------------------------------------------
 
   // draw line graph
@@ -263,7 +263,7 @@ svg.append("defs")
     })
 
     .on("mouseover", function (d) {
-
+      console.log(d)
       d3.select(this)
         .transition()
         .attr("fill", function (d) { return color(d.name); });
@@ -375,9 +375,17 @@ svg.append("defs")
   };
 
   //for brusher of the slider bar at the bottom
-  function brushed() {
+  function brushed(event) {
+    brush = event.target;
+    if (!event.selection) {
+      xScale.domain(xScale2.domain())
+    }
+    else {
+      xScale.domain([xScale2.invert(event.selection[0]),xScale2.invert(event.selection[1])])
+    }
 
-    xScale.domain(brush.empty() ? xScale2.domain() : brush.extent()); // If brush is empty then reset the Xscale domain to default, if not then make it the brush extent 
+
+    //xScale.domain(brush.empty() ? xScale2.domain() : brush.extent()); // If brush is empty then reset the Xscale domain to default, if not then make it the brush extent 
 
     svg.select(".x.axis") // replot xAxis with transition when brush used
       .transition()
