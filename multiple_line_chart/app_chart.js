@@ -3,7 +3,6 @@ async function draw() {
     d3.autoType(d);
     return d;
   })
-
   //#region Definizione dimensioni 
   let dimensions = {
     width: 1000,
@@ -188,9 +187,9 @@ svg.append("defs")
   context.append("g")    
     .call(brush)
     .attr("class", "x brush")
-    /*.selectAll("rect")
+    .selectAll("rect")
     .attr("height", height2) // Make brush rects same height 
-    .attr("fill", "#E6E7E8");*/
+    .attr("fill", "#E6E7E8");
   //end slider part-----------------------------------------------------------------------------------
 
   // draw line graph
@@ -240,7 +239,7 @@ svg.append("defs")
     })
     .attr("class", "legend-box")
 
-    .on("click", function (d) { // On click make d.visible 
+    .on("click", function (event,d) { // On click make d.visible 
       d.visible = !d.visible; // If array key for this data selection is "visible" = true then make it false, if false then make it true
 
       maxY = findMaxY(categories); // Find max Y rating value categories data with "visible"; true
@@ -262,19 +261,16 @@ svg.append("defs")
         });
     })
 
-    .on("mouseover", function (d) {
-      console.log(d)
+    .on("mouseover", function (event,d) {
       d3.select(this)
         .transition()
         .attr("fill", function (d) { return color(d.name); });
-
       d3.select("#line-" + d.name.replace(" ", "").replace("/", ""))
         .transition()
         .style("stroke-width", 2.5);
     })
 
-    .on("mouseout", function (d) {
-
+    .on("mouseout", function (event,d) {
       d3.select(this)
         .transition()
         .attr("fill", function (d) {
@@ -336,12 +332,13 @@ svg.append("defs")
         .style("opacity", 1e-6); // On mouse out making line invisible
     });
 
-  function mousemove(event,datum) {
+  function mousemove(event,d) {
+    //console.log(event)
     var mouse_x = event.x // Finding mouse x position on rect
     var graph_x = xScale.invert(mouse_x); // 
-
-    //var mouse_y = d3.mouse(this)[1]; // Finding mouse y position on rect
-    //var graph_y = yScale.invert(mouse_y);
+    
+    var mouse_y = event.y; // Finding mouse y position on rect
+    var graph_y = yScale.invert(mouse_y);
     //console.log(graph_x);
 
     var format = d3.timeFormat('%b %Y'); // Format hover date text to show three letter month and full year
@@ -355,13 +352,13 @@ svg.append("defs")
 
     // Legend tooltips // http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
 
-    var x0 = xScale.invert(event.x), /* d3.mouse(this)[0] returns the x position on the screen of the mouse. xScale.invert function is reversing the process that we use to map the domain (date) to range (position on screen). So it takes the position on the screen and converts it into an equivalent date! */
-      i = bisectDate(data, x0, 1), // use our bisectDate function that we declared earlier to find the index of our data array that is close to the mouse cursor
+    var x0 = xScale.invert(event.x); /* d3.mouse(this)[0] returns the x position on the screen of the mouse. xScale.invert function is reversing the process that we use to map the domain (date) to range (position on screen). So it takes the position on the screen and converts it into an equivalent date! */
+    var i = bisectDate(data, x0, 1); // use our bisectDate function that we declared earlier to find the index of our data array that is close to the mouse cursor
       /*It takes our data array and the date corresponding to the position of or mouse cursor and returns the index number of the data array which has a date that is higher than the cursor position.*/
-      d0 = data[i - 1],
-      d1 = data[i],
+    var d0 = data[i - 1];
+    var d1 = data[i];
       /*d0 is the combination of date and rating that is in the data array at the index to the left of the cursor and d1 is the combination of date and close that is in the data array at the index to the right of the cursor. In other words we now have two variables that know the value and date above and below the date that corresponds to the position of the cursor.*/
-      d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+    var  d = x0 - d0.date > d1.date - x0 ? d1 : d0;
     /*The final line in this segment declares a new array d that is represents the date and close combination that is closest to the cursor. It is using the magic JavaScript short hand for an if statement that is essentially saying if the distance between the mouse cursor and the date and close combination on the left is greater than the distance between the mouse cursor and the date and close combination on the right then d is an array of the date and close on the right of the cursor (d1). Otherwise d is an array of the date and close on the left of the cursor (d0).*/
 
     //d is now the data row for the date closest to the mouse position
