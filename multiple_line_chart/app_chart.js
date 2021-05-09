@@ -197,6 +197,13 @@ svg.append("defs")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
+ const tooltipDot = svg.append('circle')
+      .attr('r',5)
+      .attr('fill', '#fc8781')
+      .attr('stroke-width',2)
+      .attr('stroke','black')
+      .style('opacity',0)
+      .style('pointer-events','none') //disattiviamo gli eventi sul punto
 
   svg.append("g")
     .attr("class", "y axis")
@@ -357,11 +364,23 @@ svg.append("defs")
       /*It takes our data array and the date corresponding to the position of or mouse cursor and returns the index number of the data array which has a date that is higher than the cursor position.*/
     var d0 = data[i - 1];
     var d1 = data[i];
+    //console.log(categories)
     if (!d0 || !d1) return x0
       /*d0 is the combination of date and rating that is in the data array at the index to the left of the cursor and d1 is the combination of date and close that is in the data array at the index to the right of the cursor. In other words we now have two variables that know the value and date above and below the date that corresponds to the position of the cursor.*/
     var  d = x0 - d0.date > d1.date - x0 ? d1 : d0;
     /*The final line in this segment declares a new array d that is represents the date and close combination that is closest to the cursor. It is using the magic JavaScript short hand for an if statement that is essentially saying if the distance between the mouse cursor and the date and close combination on the left is greater than the distance between the mouse cursor and the date and close combination on the right then d is an array of the date and close on the right of the cursor (d1). Otherwise d is an array of the date and close on the left of the cursor (d0).*/
-
+    var cy = 0
+    for (j = 0; j < categories.length; j++) {
+      if (categories[j].visible) {
+        cy = categories[j].values[i].rating
+        break;
+      }
+    }
+    console.log(cy)
+    tooltipDot.style('opacity',1)
+    .attr('cx',xScale(d.date))
+    .attr('cy',yScale(cy))
+    .raise()  
     //d is now the data row for the date closest to the mouse position
 
     focus.select("text").text(function (columnName) {
